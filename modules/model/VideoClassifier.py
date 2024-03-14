@@ -112,14 +112,17 @@ class VideoClassifier(nn.Module):
                 loss = class_loss + anomaly_loss
                 # Run Backprop
                 loss.backward()
-                optimizer.step()
+                optimizer.step()  
                 # Update Running loss
                 running_class_loss += class_loss.item() * inputs.size(0)
                 running_anomaly_loss += anomaly_loss.item() * inputs.size(0)
+                print(f"Loss , \
+                      Class Loss: {class_loss:.4f}, \
+                      Loss_2: {anomaly_loss:.4f}")
 
             class_epoch_loss = running_class_loss/len(train_loader.dataset)
             anomaly_epoch_loss = running_anomaly_loss/len(train_loader.dataset)
 
-            print(f"Epoch {epoch+1}/{num_epochs}, \\
-                  Class Loss: {class_epoch_loss:.4f}, \\
+            print(f"Epoch {epoch+1}/{num_epochs}, \
+                  Class Loss: {class_epoch_loss:.4f}, \
                     Loss_2: {anomaly_epoch_loss:.4f}")

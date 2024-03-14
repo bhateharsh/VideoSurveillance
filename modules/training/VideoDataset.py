@@ -71,9 +71,12 @@ class VideoDataset(Dataset):
         return len(self.videos)
     
     def __getitem__(self, idx):
+        """
+        Return the processed input data along with label
+        """
         video_path, class_label, anomaly_label = self.videos[idx]
-        sample_video, _, _ = read_video(filename=video_path, 
-                                 output_format="TCHW")
+        sample_video = read_and_pad_video(videopath=video_path, 
+                                          max_frames=600)
         if self.transform:
-            batch = self.transform(sample_video).unsqueeze(0)
+            batch = self.transform(sample_video)
         return batch, class_label, anomaly_label

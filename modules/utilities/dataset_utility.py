@@ -18,6 +18,9 @@ import math
 import os 
 
 import pandas as pd
+import torch
+
+from torchvision.io import read_video
 
 # Constants
 DATASET_DIR = "dataset"
@@ -145,3 +148,19 @@ def decode_class(encoded_class):
     """
     assert encoded_class >= 0 and encoded_class < len(CLASS_LIST), "Invalid code"
     return CLASS_LIST[encoded_class]
+
+def read_and_pad_video(videopath, max_frames = 150):
+    """
+    Function to read a video and pad so video is of size max_frame
+    """
+    sample_video, _, _ = read_video(filename=videopath, 
+                                    output_format="TCHW")
+    print ("Length: ", sample_video.shape[0])
+    padding_shape = list(sample_video.shape)
+    padding_shape[0] = max_frames - padding_shape[0]
+    padding = torch.zeros(padding_shape, 
+                          dtype=sample_video.dtype, 
+                          device=sample_video.device)
+    padded_video = torch.cat((sample_video, padding), 
+                             dim=0)
+    return padded_video
