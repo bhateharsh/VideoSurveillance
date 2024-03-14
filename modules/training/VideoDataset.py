@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """
 Class to create dataset in PyTorch for training.
-
+TODO: Add logger
 """
 
 # Version Identification and Dependency Specification
@@ -74,7 +74,9 @@ class VideoDataset(Dataset):
     
     def __getitem__(self, idx):
         video_path, class_label, anomaly_label = self.videos[idx]
-        video, _, _ = read_video(video_path)
+        print(video_path)
+        sample_video, _, _ = read_video(filename=video_path, 
+                                 output_format="TCHW")
         if self.transform:
-            video = self.transform(video).unsqueeze(0)
-        return video, class_label, anomaly_label
+            batch = self.transform(sample_video).unsqueeze(0)
+        return batch, class_label, anomaly_label

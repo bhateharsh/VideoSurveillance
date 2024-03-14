@@ -48,4 +48,4 @@ def test_dataset(split=0.2, use_r3d_transform=True):
     print("Anomaly Label: ", anomaly_label)
 
 if __name__=="__main__":
-    test_dataset(split=0.2, use_r3d_transform=False)
+    test_dataset(split=0.2, use_r3d_transform=True)
