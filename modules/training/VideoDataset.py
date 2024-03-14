@@ -19,14 +19,13 @@ import os
 import torch
 import torchvision.transforms as transforms
 
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset
 from torchvision.io import read_video
-from torchvision.models.video import r3d_18, R3D_18_Weights
 
 from modules.utilities.dataset_utility import *
+
 # Constants
 DATASET_DIR = "dataset"
-LABELS_DIR = "Labels"
 VIDEO_FORMAT = ".mp4"
 
 class VideoDataset(Dataset):
@@ -79,28 +78,3 @@ class VideoDataset(Dataset):
         if self.transform:
             video = self.transform(video).unsqueeze(0)
         return video, class_label, anomaly_label
-
-
-# if __name__=="__main__":
-#     # Get Training set
-#     meta_data = get_filenames()
-#     test_meta_data, train_meta_data = get_split(meta_data=meta_data, 
-#                                                 split=0.2)
-#     # Get transforms
-#     weights = R3D_18_Weights.DEFAULT
-#     model = r3d_18(weights=weights)
-#     model.eval()
-#     # Initialize inference transforms
-#     preprocess = weights.transforms()
-
-#     # Initialize dataset
-#     v_dataset = VideoDataset(meta_data=train_meta_data, 
-#                              transform=None)
-#     dataloader = DataLoader(v_dataset, 
-#                             batch_size=32, 
-#                             shuffle=True)
-#     # Accessing a sample
-#     video, class_label, anomaly_label = v_dataset[0]
-#     print("Video shape: ", video.shape)
-#     print("Class Label: ", class_label)
-#     print("Anomaly Label: ", anomaly_label)
