@@ -48,6 +48,13 @@ def _extract_label(string):
     else:
         return None 
     
+def _encode_class(class_label):
+    """
+    Function to encode class string to int
+    """
+    assert class_label in CLASS_LIST, "Class label not supported"
+    return CLASS_LIST.index(class_label)
+    
 def _clean_and_update_metadata(dataset):
     """
     Update the path and check if it is true.
@@ -55,10 +62,8 @@ def _clean_and_update_metadata(dataset):
     clean_data = []
     for _, row in dataset.iterrows():
         file_name = row[0]
-        class_label = row[1]
+        class_label = _encode_class(row[1])
         anomaly_label = row[2]
-        # Check Class Label
-        assert class_label in CLASS_LIST, "Class not found"
         # Check Anomaly Label
         assert ~math.isnan(anomaly_label), "Anomaly label not found"
         # Update file name
@@ -66,7 +71,7 @@ def _clean_and_update_metadata(dataset):
         assert sub_dir != None, f"sub dir: {file_name} couldn't be extracted"
         sub_dir = sub_dir + VIDEO_FORMAT
         file_path = os.path.join(DATASET_DIR, 
-                                 class_label, 
+                                 row[1], 
                                  sub_dir, 
                                  file_name + VIDEO_FORMAT)
         # Update anomaly label
@@ -133,3 +138,10 @@ def get_split(meta_data, split=0.2):
     test_split = meta_data.iloc[:test_end]
     train_split = meta_data.iloc[train_start:]
     return test_split, train_split
+
+def decode_class(encoded_class):
+    """
+    Function to decode int to class string
+    """
+    assert encoded_class >= 0 and encoded_class < len(CLASS_LIST), "Invalid code"
+    return CLASS_LIST[encoded_class]

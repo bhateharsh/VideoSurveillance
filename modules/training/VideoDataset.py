@@ -54,12 +54,10 @@ class VideoDataset(Dataset):
         self.transform = transform
         self.class_data, self.anomaly_data = get_statistics(self.meta_data)
         self.class_list = list(self.class_data.keys())
-        print(self.class_list)
         self._dataset_dir = "dataset"
         self._video_format = ".mp4"
         self.videos = self._load_videos()
-        print (self.videos[0:5])
-
+        
     def _load_videos(self):
         """
         Function that creates a list of video path with annotations
@@ -74,7 +72,6 @@ class VideoDataset(Dataset):
     
     def __getitem__(self, idx):
         video_path, class_label, anomaly_label = self.videos[idx]
-        print(video_path)
         sample_video, _, _ = read_video(filename=video_path, 
                                  output_format="TCHW")
         if self.transform:

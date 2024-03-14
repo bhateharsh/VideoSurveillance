@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Test dataset parsing
+Test dataset generator
 
 TODO: Use google test or other framework and create unit tests
 """
@@ -44,8 +44,9 @@ def test_dataset(split=0.2, use_r3d_transform=True):
     # Accessing a sample
     video, class_label, anomaly_label = v_dataset[0]
     print("Video shape: ", video.shape)
-    print("Class Label: ", class_label)
+    print("Class Label (Encoded): ", class_label)
     print("Anomaly Label: ", anomaly_label)
+    print ("Class Label (Decoded): ", decode_class(class_label))
 
 if __name__=="__main__":
     test_dataset(split=0.2, use_r3d_transform=True)
