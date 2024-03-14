@@ -79,3 +79,47 @@ class VideoClassifier(nn.Module):
         """
         self.load_state_dict(torch.load(filepath))
         print ("Model loaded from ", filepath)
+
+    def train_model(self, 
+                    train_loader, 
+                    class_criterion, 
+                    anomaly_criterion, 
+                    optimizer, 
+                    device, 
+                    num_epochs):
+        """
+        Function to train model
+        """
+        self.train()
+        self.to(device)
+
+        for epoch in range(num_epochs):
+            running_class_loss = 0.0
+            running_anomaly_loss = 0.0
+
+            for inputs, class_labels, anomaly_labels in train_loader:
+                # Convert the input and labels to device type
+                inputs = inputs.to(device)
+                class_labels = class_labels.to(device)
+                anomaly_labels = anomaly_labels.to(device)
+                # Set optimizer
+                optimizer.zero_grad()
+                # Run forward loop
+                class_outputs, anomaly_outputs = self(inputs)
+                # Compute loss
+                class_loss = class_criterion(class_outputs, class_labels)
+                anomaly_loss = anomaly_criterion(anomaly_outputs, anomaly_labels)
+                loss = class_loss + anomaly_loss
+                # Run Backprop
+                loss.backward()
+                optimizer.step()
+                # Update Running loss
+                running_class_loss += class_loss.item() * inputs.size(0)
+                running_anomaly_loss += anomaly_loss.item() * inputs.size(0)
+
+            class_epoch_loss = running_class_loss/len(train_loader.dataset)
+            anomaly_epoch_loss = running_anomaly_loss/len(train_loader.dataset)
+
+            print(f"Epoch {epoch+1}/{num_epochs}, \\
+                  Class Loss: {class_epoch_loss:.4f}, \\
+                    Loss_2: {anomaly_epoch_loss:.4f}")
