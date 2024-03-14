@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """
 Class to describe PyTorch model for training.
-TODO:s Add logger
+TODO: Add logger
 """
 
 # Version Identification and Dependency Specification
